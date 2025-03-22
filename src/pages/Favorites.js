@@ -8,6 +8,7 @@ const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [removalSuccess, setRemovalSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const moviesPerPage = 10; // Movies per page
 
@@ -18,12 +19,14 @@ const Favorites = () => {
 
   const handleOpen = (movie) => {
     setSelectedMovie(movie);
+    setRemovalSuccess(false);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
     setSelectedMovie(null);
+    setRemovalSuccess(false);
   };
 
   const removeFavorite = () => {
@@ -31,7 +34,12 @@ const Favorites = () => {
       const updatedFavorites = favorites.filter((movie) => movie.imdbID !== selectedMovie.imdbID);
       setFavorites(updatedFavorites);
       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-      handleClose();
+      setRemovalSuccess(true);
+
+      // Automatically close the dialog after a delay
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
     }
   };
 
@@ -97,15 +105,21 @@ const Favorites = () => {
 
       {/* Confirmation Dialog */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Remove from Favorites</DialogTitle>
+        <DialogTitle>{removalSuccess ? "Success" : "Remove from Favorites"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to remove "{selectedMovie?.Title}" from your favorites?
+            {removalSuccess 
+              ? `"${selectedMovie?.Title}" has been successfully removed from your favorites.` 
+              : `Are you sure you want to remove "${selectedMovie?.Title}" from your favorites?`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">Cancel</Button>
-          <Button onClick={removeFavorite} color="error">Remove</Button>
+          {!removalSuccess && (
+            <>
+              <Button onClick={handleClose} color="primary">Cancel</Button>
+              <Button onClick={removeFavorite} color="error">Remove</Button>
+            </>
+          )}
         </DialogActions>
       </Dialog>
     </Box>
