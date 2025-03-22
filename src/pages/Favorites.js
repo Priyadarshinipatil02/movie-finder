@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { 
   Box, Stack, Card, CardMedia, CardContent, Typography, Button, Dialog, DialogActions, 
-  DialogContent, DialogContentText, DialogTitle 
+  DialogContent, DialogContentText, DialogTitle, Pagination 
 } from "@mui/material";
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const moviesPerPage = 10; // Movies per page
 
   useEffect(() => {
     const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -33,6 +35,15 @@ const Favorites = () => {
     }
   };
 
+  // Pagination logic
+  const indexOfLastMovie = currentPage * moviesPerPage;
+  const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
+  const currentMovies = favorites.slice(indexOfFirstMovie, indexOfLastMovie);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
   return (
     <Box sx={{ mt: 3, px: 2 }}>
       {favorites.length === 0 ? (
@@ -40,24 +51,48 @@ const Favorites = () => {
           No favorite movies yet.
         </Typography>
       ) : (
-        <Stack direction="row" flexWrap="wrap" justifyContent="center" gap={3}>
-          {favorites.map((movie) => (
-            <Card key={movie.imdbID} sx={{ width: 280 }}>
-              <CardMedia component="img" image={movie.Poster} alt={movie.Title} sx={{ height: 300 }} />
-              <CardContent>
-                <Typography variant="h6" noWrap>{movie.Title}</Typography>
-                <Button 
-                  variant="contained" 
-                  color="error" 
-                  fullWidth 
-                  onClick={() => handleOpen(movie)}
-                >
-                  Remove
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </Stack>
+        <>
+          <Stack direction="row" flexWrap="wrap" justifyContent="center" gap={3}>
+            {currentMovies.map((movie) => (
+              <Card 
+                key={movie.imdbID} 
+                sx={{ 
+                  width: 280, 
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease", 
+                  "&:hover": { 
+                    transform: "scale(1.05)", 
+                    boxShadow: 6 
+                  } 
+                }}
+              >
+                <CardMedia component="img" image={movie.Poster} alt={movie.Title} sx={{ height: 300 }} />
+                <CardContent>
+                  <Typography variant="h6" noWrap>{movie.Title}</Typography>
+                  <Button 
+                    variant="contained" 
+                    color="error" 
+                    fullWidth 
+                    onClick={() => handleOpen(movie)}
+                  >
+                    Remove
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </Stack>
+
+          {/* Pagination Component */}
+          {favorites.length > moviesPerPage && (
+            <Box display="flex" justifyContent="center" mt={3}>
+              <Pagination
+                count={Math.ceil(favorites.length / moviesPerPage)}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Box>
+          )}
+        </>
       )}
 
       {/* Confirmation Dialog */}
