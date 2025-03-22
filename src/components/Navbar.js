@@ -51,17 +51,20 @@ const Navbar = () => {
       <Toolbar>
         <Grid container alignItems="center" justifyContent="space-between">
           
-          {/* Logo */}
+          {/* Clickable Logo */}
           <Grid item xs={6} sm={3} md={3}>
-            <Typography
-              variant="h6"
-              sx={{
-                fontSize: { xs: "16px", sm: "20px", md: "24px" },
-                fontWeight: "bold",
-              }}
-            >
-              Movie Finder
-            </Typography>
+            <Link to="/" style={{ textDecoration: "none", color: darkMode ? "white" : "black" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: { xs: "16px", sm: "20px", md: "24px" },
+                  fontWeight: "bold",
+                  cursor: "pointer", // Make it feel clickable
+                }}
+              >
+                Movie Finder
+              </Typography>
+            </Link>
           </Grid>
 
           {/* Navigation Links - Hidden on Mobile */}

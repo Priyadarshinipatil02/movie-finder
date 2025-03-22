@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { TextField } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import debounce from "lodash.debounce";
 
 const SearchBar = ({ onSearch }) => {
@@ -11,21 +11,21 @@ const SearchBar = ({ onSearch }) => {
   );
 
   return (
-    <TextField
-      fullWidth
-      label="Search Movies"
-      variant="outlined"
-      value={query}
-      onChange={(e) => {
-        setQuery(e.target.value);
-        debouncedSearch(e.target.value);
-      }}
-      sx={{
-        marginTop: "1.5rem",
-        width: "40%",
-        
-      }}
-    />
+    <Box display="flex" justifyContent="center">
+      <TextField
+        label="Search Movies"
+        variant="outlined"
+        value={query}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          debouncedSearch(e.target.value);
+        }}
+        sx={{
+          marginTop: "1.5rem",
+          width: "40%",
+        }}
+      />
+    </Box>
   );
 };
 
