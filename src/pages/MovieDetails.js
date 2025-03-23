@@ -6,7 +6,7 @@ import { CircularProgress, Container, Typography, Card, CardMedia, CardContent, 
 const API_KEY = "92213979";
 
 const MovieDetails = () => {
-  const { id } = useParams(); // Get movie ID from URL
+  const { id } = useParams(); 
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,7 +40,7 @@ const MovieDetails = () => {
       {movie && (
         <Card sx={{ maxWidth: 900, margin: "auto", mt: 4, p: 3, borderRadius: 3 }}>
           <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
-            {/* Movie Poster */}
+            
             <Box flexShrink={0} sx={{ textAlign: "center" }}>
               <CardMedia
                 component="img"
@@ -50,7 +50,7 @@ const MovieDetails = () => {
               />
             </Box>
 
-            {/* Movie Details */}
+            
             <CardContent>
               <Typography variant="h4" gutterBottom>
                 {movie.Title} ({movie.Year})

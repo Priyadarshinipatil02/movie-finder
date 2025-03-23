@@ -9,9 +9,9 @@ const Home = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [query, setQuery] = useState("Avengers"); // Default search query
+  const [query, setQuery] = useState("Avengers"); 
 
-  // Fetch movies
+  
   const fetchMovieData = async (searchQuery) => {
     setLoading(true);
     setError(false);
@@ -24,32 +24,32 @@ const Home = () => {
       setMovies(results);
     } catch (err) {
       setError(true);
-      setMovies([]); // Clear movie list on error
+      setMovies([]); 
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetch initial movies on mount
+
   useEffect(() => {
     fetchMovieData(query);
   }, []);
 
-  // Handle user search
+
   const handleSearch = (searchQuery) => {
     if (!searchQuery.trim()) return;
-    setQuery(searchQuery); // Store last searched query
+    setQuery(searchQuery); 
     fetchMovieData(searchQuery);
   };
 
-  // Retry last search
+  
   const handleRetry = () => {
     fetchMovieData(query);
   };
 
-  // Reset to initial movies
+  
   const handleReset = () => {
-    setQuery("Avengers"); // Reset query to initial
+    setQuery("Avengers"); 
     fetchMovieData("Avengers");
   };
 

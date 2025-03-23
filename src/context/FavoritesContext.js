@@ -6,7 +6,7 @@ const favoritesReducer = (state, action) => {
   switch (action.type) {
     case "ADD_FAVORITE":
       if (state.some((movie) => movie.imdbID === action.payload.imdbID)) {
-        return state; // Prevent duplicates
+        return state; 
       }
       return [...state, action.payload];
 

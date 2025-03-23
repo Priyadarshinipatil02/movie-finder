@@ -10,7 +10,7 @@ const Favorites = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [removalSuccess, setRemovalSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const moviesPerPage = 10; // Movies per page
+  const moviesPerPage = 10; 
 
   useEffect(() => {
     const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -36,14 +36,13 @@ const Favorites = () => {
       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
       setRemovalSuccess(true);
 
-      // Automatically close the dialog after a delay
       setTimeout(() => {
         handleClose();
       }, 1500);
     }
   };
 
-  // Pagination logic
+  
   const indexOfLastMovie = currentPage * moviesPerPage;
   const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
   const currentMovies = favorites.slice(indexOfFirstMovie, indexOfLastMovie);
@@ -89,7 +88,7 @@ const Favorites = () => {
             ))}
           </Stack>
 
-          {/* Pagination Component */}
+         
           {favorites.length > moviesPerPage && (
             <Box display="flex" justifyContent="center" mt={3}>
               <Pagination
@@ -103,7 +102,7 @@ const Favorites = () => {
         </>
       )}
 
-      {/* Confirmation Dialog */}
+     
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{removalSuccess ? "Success" : "Remove from Favorites"}</DialogTitle>
         <DialogContent>

@@ -1,11 +1,10 @@
-import { AppBar, Toolbar, Typography, Switch, Grid, useMediaQuery, useTheme } from "@mui/material";
+import { useState, useContext } from "react";
+import { AppBar, Toolbar, Typography, Switch, Grid, useMediaQuery, useTheme, Drawer, IconButton, Box } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { styled } from "@mui/system";
-import { DarkMode, LightMode, Menu } from "@mui/icons-material";
+import { DarkMode, LightMode, Menu, Close } from "@mui/icons-material";
 
-// Custom styled switch
 const ThemeSwitch = styled(Switch)({
   width: 50,
   height: 30,
@@ -35,7 +34,8 @@ const Navbar = () => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const location = useLocation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Detect mobile screens
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <AppBar
@@ -50,8 +50,7 @@ const Navbar = () => {
     >
       <Toolbar>
         <Grid container alignItems="center" justifyContent="space-between">
-          
-          {/* Clickable Logo */}
+          {/* Logo */}
           <Grid item xs={6} sm={3} md={3}>
             <Link to="/" style={{ textDecoration: "none", color: darkMode ? "white" : "black" }}>
               <Typography
@@ -59,7 +58,7 @@ const Navbar = () => {
                 sx={{
                   fontSize: { xs: "16px", sm: "20px", md: "24px" },
                   fontWeight: "bold",
-                  cursor: "pointer", // Make it feel clickable
+                  cursor: "pointer",
                 }}
               >
                 Movie Finder
@@ -67,7 +66,7 @@ const Navbar = () => {
             </Link>
           </Grid>
 
-          {/* Navigation Links - Hidden on Mobile */}
+          {/* Desktop Menu */}
           {!isMobile && (
             <Grid item sm={6} md={5} sx={{ textAlign: "center" }}>
               <Link
@@ -97,10 +96,12 @@ const Navbar = () => {
             </Grid>
           )}
 
-          {/* Mobile Menu or Dark Mode Toggle */}
+          {/* Mobile Menu Icon */}
           <Grid item xs={6} sm={3} md={3} sx={{ textAlign: "right" }}>
             {isMobile ? (
-              <Menu sx={{ fontSize: "28px", cursor: "pointer" }} />
+              <IconButton onClick={() => setMenuOpen(true)}>
+                <Menu sx={{ fontSize: "28px", color: darkMode ? "white" : "black" }} />
+              </IconButton>
             ) : (
               <ThemeSwitch
                 checked={darkMode}
@@ -112,6 +113,56 @@ const Navbar = () => {
           </Grid>
         </Grid>
       </Toolbar>
+
+      {/* Mobile Drawer */}
+      <Drawer anchor="right" open={menuOpen} onClose={() => setMenuOpen(false)}>
+        <Box sx={{ width: 250, padding: "20px", backgroundColor: darkMode ? "#1a1a1a" : "#fff", height: "100%" }}>
+          {/* Close Button */}
+          <IconButton onClick={() => setMenuOpen(false)} sx={{ float: "right" }}>
+            <Close sx={{ fontSize: "28px", color: darkMode ? "white" : "black" }} />
+          </IconButton>
+
+          {/* Menu Items */}
+          <Box sx={{ display: "flex", flexDirection: "column", mt: 4 }}>
+            <Link
+              to="/"
+              onClick={() => setMenuOpen(false)}
+              style={{
+                textDecoration: "none",
+                color: location.pathname === "/" ? (darkMode ? "#4da6ff" : "#001d40") : darkMode ? "#e0e0e0" : "#333",
+                fontSize: "20px",
+                fontWeight: location.pathname === "/" ? "bold" : "normal",
+                padding: "10px",
+              }}
+            >
+              Home
+            </Link>
+            <Link
+              to="/favorites"
+              onClick={() => setMenuOpen(false)}
+              style={{
+                textDecoration: "none",
+                color: location.pathname === "/favorites" ? (darkMode ? "#4da6ff" : "#001d40") : darkMode ? "#e0e0e0" : "#333",
+                fontSize: "20px",
+                fontWeight: location.pathname === "/favorites" ? "bold" : "normal",
+                padding: "10px",
+              }}
+            >
+              Favorites
+            </Link>
+          </Box>
+
+          {/* Dark Mode Toggle */}
+          <Box sx={{ textAlign: "center", mt: 4 }}>
+            <ThemeSwitch
+              checked={darkMode}
+              onChange={() => setDarkMode(!darkMode)}
+              icon={<LightMode sx={{ fontSize: "18px", color: "#ffcc00" }} />}
+              checkedIcon={<DarkMode sx={{ fontSize: "18px", color: "#4da6ff" }} />}
+            />
+          </Box>
+        </Box>
+      </Drawer>
     </AppBar>
   );
 };
