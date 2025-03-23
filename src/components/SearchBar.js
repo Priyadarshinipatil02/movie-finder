@@ -1,14 +1,21 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { TextField, Box } from "@mui/material";
 import debounce from "lodash.debounce";
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState("");
 
+ 
   const debouncedSearch = useCallback(
     debounce((q) => onSearch(q), 500),
     [onSearch]
   );
+
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel(); 
+    };
+  }, [debouncedSearch]);
 
   return (
     <Box display="flex" justifyContent="center">
